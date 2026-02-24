@@ -152,7 +152,7 @@ function salvar(){
   row.insertCell(5).innerText = umPorCento.toFixed(2);
   row.insertCell(6).innerText = status;
 
-  fetch("SUA_URL_DO_SCRIPT", {
+  fetch("https://script.google.com/macros/s/AKfycbxS8H4SzgpGhoGEG7zi6QeAETsNshxVir8KTfSRDa_hSpi0jN7XYhTpdyPuZ4KUc7F4/exec", {
     method: "POST",
     body: JSON.stringify({
       cliente: cliente,
