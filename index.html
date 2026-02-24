@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Controle de Quebra</title>
+
+<style>
+body {
+  font-family: Arial;
+  background: #f2f2f2;
+  padding: 30px;
+}
+
+.container {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  max-width: 1000px;
+  margin: auto;
+}
+
+input {
+  padding: 8px;
+  margin: 5px;
+  width: 150px;
+}
+
+button {
+  padding: 10px 20px;
+  background: #0d6efd;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+table {
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.vermelho { background: #ffb3b3; }
+.verde { background: #b3ffb3; }
+.amarelo { background: #fff5b3; }
+
+.dashboard {
+  margin-top: 30px;
+  padding: 20px;
+  background: #111;
+  color: white;
+  border-radius: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Cadastro de Controle</h2>
+
+<input id="cliente" placeholder="Cliente">
+<input id="filial" placeholder="Filial">
+<input id="notaFiscal" placeholder="Nota Fiscal">
+<input id="entrada" type="number" placeholder="Entrada">
+<input id="saldo" type="number" placeholder="Saldo">
+<input id="romaneio" placeholder="Nº Romaneio">
+
+<button onclick="salvar()">Salvar</button>
+
+<table id="tabela">
+<tr>
+<th>Cliente</th>
+<th>Filial</th>
+<th>NF</th>
+<th>Entrada</th>
+<th>Saldo</th>
+<th>1%</th>
+<th>Status</th>
+</tr>
+</table>
+
+<div class="dashboard">
+<h3>Dashboard</h3>
+<p>Total Registros: <span id="total">0</span></p>
+<p>Maior que 1%: <span id="maior">0</span></p>
+<p>Menor que 1%: <span id="menor">0</span></p>
+<p>Igual a 1%: <span id="igual">0</span></p>
+</div>
+
+</div>
+
+<script>
+
+let total=0, maior=0, menor=0, igual=0;
+
+function salvar(){
+
+  let cliente = document.getElementById("cliente").value;
+  let filial = document.getElementById("filial").value;
+  let notaFiscal = document.getElementById("notaFiscal").value;
+  let entrada = parseFloat(document.getElementById("entrada").value);
+  let saldo = parseFloat(document.getElementById("saldo").value);
+  let romaneio = document.getElementById("romaneio").value;
+
+  if(!cliente || !filial || !notaFiscal || !entrada || !saldo || !romaneio){
+    alert("Preencha todos os campos!");
+    return;
+  }
+
+  let umPorCento = entrada * 0.01;
+  let status = "";
+  let classe = "";
+
+  if(saldo > umPorCento){
+    status="MAIOR";
+    classe="vermelho";
+    maior++;
+  } else if(saldo < umPorCento){
+    status="MENOR";
+    classe="verde";
+    menor++;
+  } else {
+    status="IGUAL";
+    classe="amarelo";
+    igual++;
+  }
+
+  total++;
+
+  document.getElementById("total").innerText = total;
+  document.getElementById("maior").innerText = maior;
+  document.getElementById("menor").innerText = menor;
+  document.getElementById("igual").innerText = igual;
+
+  let tabela = document.getElementById("tabela");
+  let row = tabela.insertRow();
+  row.classList.add(classe);
+
+  row.insertCell(0).innerText = cliente;
+  row.insertCell(1).innerText = filial;
+  row.insertCell(2).innerText = notaFiscal;
+  row.insertCell(3).innerText = entrada;
+  row.insertCell(4).innerText = saldo;
+  row.insertCell(5).innerText = umPorCento.toFixed(2);
+  row.insertCell(6).innerText = status;
+
+  fetch("SUA_URL_DO_SCRIPT", {
+    method: "POST",
+    body: JSON.stringify({
+      cliente: cliente,
+      filial: filial,
+      notaFiscal: notaFiscal,
+      entrada: entrada,
+      saldo: saldo,
+      romaneio: romaneio
+    })
+  });
+
+}
+</script>
+
+</body>
+</html>
